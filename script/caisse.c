@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <stdbool.h> // Pour utiliser le type de données booléen
 
 // Structure pour stocker les billets et pièces disponibles
 typedef struct {
@@ -59,12 +58,6 @@ void mettre_a_jour_stock(Stock *stock, double monnaie_restante) {
     // Ajouter d'autres mises à jour en fonction de la monnaie à rendre
 }
 
-// Fonction pour vérifier si la caisse peut rendre la monnaie
-bool peut_rendre_monnaie(double montant_a_payer, double montant_utilisateur) {
-    // Logique pour vérifier si la caisse peut rendre la monnaie
-    return montant_utilisateur >= montant_a_payer;
-}
-
 // Fonction pour calculer la monnaie à rendre
 void calcule_monnaie(double montant_a_payer, double montant_utilisateur, Stock *stock) {
     double monnaie_a_rendre = montant_utilisateur - montant_a_payer;
@@ -79,4 +72,29 @@ int main() {
 
     // Initialiser les stocks de billets et de pièces
     Stock stock;
+    initialiser_stock(&stock);
+
+    // Génération d'un double aléatoire entre 1 et 1000 pour représenter la valeur à payer
+    double valeur_a_payer = (double)rand() / RAND_MAX * 1000.0;
+    printf("La valeur à payer est : Rs%.2f\n", valeur_a_payer);
+
+    double montant_utilisateur;
+    do {
+        printf("Entrez le montant que vous souhaitez payer : Rs");
+        scanf("%lf", &montant_utilisateur);
+
+        if (montant_utilisateur < valeur_a_payer) {
+            printf("Le montant saisi est insuffisant. Veuillez entrer un montant supérieur ou égal à Rs%.2f\n", valeur_a_payer);
+        }
+    } while (montant_utilisateur < valeur_a_payer);
+
+    // Appel de la fonction calcule_monnaie pour calculer la monnaie à rendre et mettre à jour les stocks
+    calcule_monnaie(valeur_a_payer, montant_utilisateur, &stock);
+
+    // Afficher l'état des stocks après la transaction
+    afficher_stock(stock);
+
+    printf("Merci pour votre paiement.\n");
+
+    return 0;
 }
